@@ -2,8 +2,9 @@
   "name": "gulp-workshop",
   "version": "1.0.0",
   "description": "Workshop with Jörn from Campudus at 20.02.2016 by TNG Münich",
-  "main": "index.js",
+  "main": "gulpfile.js",
   "scripts": {
+    "build": "gulp clean && gulp build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
