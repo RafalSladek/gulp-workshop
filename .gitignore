@@ -35,6 +35,8 @@ node_modules
 #swap files
 .swp
 
+#ide dirs
+.idea
 
 #output dir
 out
