@@ -100,7 +100,7 @@ function onError(err) {
 
 function inspect() {
     return through.obj(function (file, _, callback) {
-        gutil.log('looking at the file', file);
+        gutil.log('looking at the file', file.contents.toString());
         //this.emit('error', new Error('something broke'));
         this.push(file)
         callback();
