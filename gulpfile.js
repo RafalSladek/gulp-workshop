@@ -7,6 +7,8 @@ var del = require('del');
 var browserSync = require('browser-sync');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
+var buffer = require('vinyl-buffer');
+var sourcemaps = require('gulp-sourcemaps');
 
 gulp.task('default', ['build']);
 
@@ -50,7 +52,10 @@ function copyTask() {
 function copyScssTask() {
     gutil.log("starting with scss files...");
     return gulp.src('src/styles/*.scss')
-        .pipe(plumber(onError()))
+        .pipe(plumber(function (err) {
+            gutil.log('error occurred in scripts', err);
+            this.push(null);
+        }))
         .pipe(inspect())
         .pipe(sass())
         .pipe(plumber.stop())
@@ -60,10 +65,18 @@ function copyScssTask() {
 }
 
 function buildScritpsTask() {
-    return browserify('src/scripts/main.js')
+    return browserify('src/scripts/main.js', {
+        debug: true
+    })
         .bundle()
-        .on('error', onError)
+        .on('error', function (err) {
+            gutil.log('error occurred in scripts', err);
+            this.push(null);
+        })
         .pipe(source('bundle.js'))
+        .pipe(buffer())
+        .pipe(sourcemaps.init({loadMaps: true}))
+        .pipe(sourcemaps.write())
         .pipe(gulp.dest('out/'))
         .pipe(browserSync.stream())
 }
@@ -81,7 +94,8 @@ function logging(file, _, callback) {
 
 function onError(err) {
     gutil.log('error occurred in scripts', err);
-    this.push(null); // with push null to the current stream which has error, so the other streams can work properly
+    this.push(null);
+    // with push null to the current stream which has error, so the other streams can work properly
 }
 
 function inspect() {
