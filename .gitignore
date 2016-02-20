@@ -34,3 +34,7 @@ node_modules
 
 #swap files
 .swp
+
+
+#output dir
+out
