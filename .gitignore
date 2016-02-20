@@ -33,11 +33,10 @@ node_modules
 .node_repl_history
 
 #swap files
-.swp
+*.swp
 
 #iml project file
-.iml
-
+*.iml
 
 #ide dirs
 .idea
