@@ -4,10 +4,12 @@ var gutil = require('gulp-util');
 var plumber = require('gulp-plumber');
 var through = require('through2');
 var del = require('del');
+var browserSync = require('browser-sync');
 
 gulp.task('default', ['build']);
 
 gulp.task('build', ['copy', 'sass']);
+gulp.task('dev', ['watch'], setupBrowserSyncTask);
 
 // See https://www.npmjs.com/package/gulp-sequence
 // to make this sequential
@@ -32,7 +34,8 @@ function watchCopyTask() {
 
 function copyTask() {
     return gulp.src('src/assets/**')
-        .pipe(gulp.dest('out/'));
+        .pipe(gulp.dest('out/'))
+        .pipe(browserSync.stream());
 }
 
 function copyScssTask() {
@@ -46,7 +49,8 @@ function copyScssTask() {
         .pipe(sass())
         .pipe(plumber.stop())
         .pipe(through.obj(logging))
-        .pipe(gulp.dest('out/'));
+        .pipe(gulp.dest('out/'))
+        .pipe(browserSync.stream());
 }
 
 function cleanUp() {
@@ -65,5 +69,14 @@ function inspect() {
         //this.emit('error', new Error('something broke'));
         this.push(file)
         callback();
+    });
+}
+
+function setupBrowserSyncTask() {
+    browserSync({
+        server: {
+            baseDir: 'out'
+        },
+        open: false
     });
 }
