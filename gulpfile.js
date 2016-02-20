@@ -5,31 +5,40 @@ var plumber = require('gulp-plumber');
 var through = require('through2');
 var del = require('del');
 var browserSync = require('browser-sync');
+var browserify = require('browserify');
+var source = require('vinyl-source-stream');
 
 gulp.task('default', ['build']);
 
-gulp.task('build', ['copy', 'sass']);
+gulp.task('build', ['build:copy', 'build:sass', 'build:scripts']);
+
 gulp.task('dev', ['watch'], setupBrowserSyncTask);
 
 // See https://www.npmjs.com/package/gulp-sequence
 // to make this sequential
-gulp.task('watch', ['build', 'watch:scss', 'watch:copy']);
+gulp.task('watch', ['build', 'watch:scss', 'watch:copy', 'watch:scripts']);
 gulp.task('watch:scss', watchScssTask);
 gulp.task('watch:copy', watchCopyTask);
+gulp.task('watch:scripts', watchScriptsTask);
 
-gulp.task('sass', copyScssTask);
+gulp.task('build:sass', copyScssTask);
+gulp.task('build:scripts', buildScritpsTask);
 
-gulp.task('copy', copyTask);
+gulp.task('build:copy', copyTask);
 
 gulp.task('clean', cleanUp);
 
 
 function watchScssTask() {
-    gulp.watch('src/styles/*.scss', {}, ['sass'])
+    gulp.watch('src/styles/*.scss', {}, ['build:sass'])
+}
+
+function watchScriptsTask() {
+    gulp.watch('src/scripts/*.js', {}, ['build:scripts'])
 }
 
 function watchCopyTask() {
-    gulp.watch('src/assets/**', {}, ['copy'])
+    gulp.watch('src/assets/**', {}, ['build:copy'])
 }
 
 function copyTask() {
@@ -41,16 +50,22 @@ function copyTask() {
 function copyScssTask() {
     gutil.log("starting with scss files...");
     return gulp.src('src/styles/*.scss')
-        .pipe(plumber(function (err) {
-            gutil.log('error occurred in pipeline', err);
-            this.push(null);
-        }))
+        .pipe(plumber(onError()))
         .pipe(inspect())
         .pipe(sass())
         .pipe(plumber.stop())
         .pipe(through.obj(logging))
         .pipe(gulp.dest('out/'))
-        .pipe(browserSync.stream());
+        .pipe(browserSync.stream())
+}
+
+function buildScritpsTask() {
+    return browserify('src/scripts/main.js')
+        .bundle()
+        .on('error', onError)
+        .pipe(source('bundle.js'))
+        .pipe(gulp.dest('out/'))
+        .pipe(browserSync.stream())
 }
 
 function cleanUp() {
@@ -61,6 +76,12 @@ function logging(file, _, callback) {
     gutil.log("hi there");
     this.push(file);
     callback();
+}
+
+
+function onError(err) {
+    gutil.log('error occurred in scripts', err);
+    this.push(null); // with push null to the current stream which has error, so the other streams can work properly
 }
 
 function inspect() {
