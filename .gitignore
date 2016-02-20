@@ -34,9 +34,9 @@ node_modules
 
 #swap files
 *.swp
-
-/gulp-workshop.iml
-/.idea
+*.iml
+.idea
+.idea/*
 
 
 #output dir

@@ -1,5 +1,7 @@
 var gulp = require('gulp');
 var sass = require('gulp-sass');
+var gutil = require('gulp-util');
+var through = require('through2');
 var del = require('del');
 
 
@@ -19,11 +21,19 @@ function copyTask() {
 }
 
 function copyScssTask() {
-    return gulp.src('src/styles/**')
+    gutil.log("starting with scss files...");
+    return gulp.src('src/styles/*.scss')
         .pipe(sass())
+        .pipe(through.obj(logging))
         .pipe(gulp.dest('out/'));
 }
 
 function cleanUp() {
     return del('out/');
+}
+
+function logging(file,_, callback){
+    gutil.log("hi there");
+    this.push(file);
+    callback();
 }
