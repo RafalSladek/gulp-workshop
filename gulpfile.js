@@ -8,7 +8,9 @@ gulp.task('default', ['build']);
 
 gulp.task('build', ['copy', 'sass']);
 
-gulp.task('watch', ['watch:scss', 'watch:copy']);
+// See https://www.npmjs.com/package/gulp-sequence
+// to make this sequential
+gulp.task('watch', ['build', 'watch:scss', 'watch:copy']);
 gulp.task('watch:scss', watchScssTask);
 gulp.task('watch:copy', watchCopyTask);
 
@@ -19,11 +21,11 @@ gulp.task('copy', copyTask);
 gulp.task('clean', cleanUp);
 
 
-function watchScssTask(){
+function watchScssTask() {
     gulp.watch('src/styles/*.scss', {}, ['scss'])
 }
 
-function watchCopyTask(){
+function watchCopyTask() {
     gulp.watch('src/assets/**', {}, ['copy'])
 }
 
@@ -44,7 +46,7 @@ function cleanUp() {
     return del('out/');
 }
 
-function logging(file,_, callback){
+function logging(file, _, callback) {
     gutil.log("hi there");
     this.push(file);
     callback();
