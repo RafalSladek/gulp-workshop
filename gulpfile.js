@@ -22,7 +22,7 @@ gulp.task('clean', cleanUp);
 
 
 function watchScssTask() {
-    gulp.watch('src/styles/*.scss', {}, ['scss'])
+    gulp.watch('src/styles/*.scss', {}, ['sass'])
 }
 
 function watchCopyTask() {
@@ -38,6 +38,10 @@ function copyScssTask() {
     gutil.log("starting with scss files...");
     return gulp.src('src/styles/*.scss')
         .pipe(sass())
+        .on('error', function(err){
+            gutil.log('error occured', err)
+            this.push(null)
+        })
         .pipe(through.obj(logging))
         .pipe(gulp.dest('out/'));
 }
