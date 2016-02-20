@@ -1,0 +1,22 @@
+{
+  "name": "gulp-workshop",
+  "version": "1.0.0",
+  "description": "Workshop with Jörn from Campudus at 20.02.2016 by TNG Münich",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RafalSladek/gulp-workshop.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RafalSladek/gulp-workshop/issues"
+  },
+  "homepage": "https://github.com/RafalSladek/gulp-workshop#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1"
+  }
+}
