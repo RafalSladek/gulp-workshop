@@ -24,6 +24,6 @@ function copyScssTask() {
         .pipe(gulp.dest('out/'));
 }
 
-function cleanUp(){
+function cleanUp() {
     return del('out/');
 }
