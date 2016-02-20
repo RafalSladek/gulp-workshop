@@ -76,7 +76,7 @@ function buildScritpsTask() {
         .pipe(source('bundle.js'))
         .pipe(buffer())
         .pipe(sourcemaps.init({loadMaps: true}))
-        .pipe(sourcemaps.write())
+        .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest('out/'))
         .pipe(browserSync.stream())
 }
