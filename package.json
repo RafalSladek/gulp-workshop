@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/RafalSladek/gulp-workshop#readme",
   "devDependencies": {
+    "del": "^2.2.0",
     "gulp": "^3.9.1"
   }
 }
