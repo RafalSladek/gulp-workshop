@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 var sass = require('gulp-sass');
 var gutil = require('gulp-util');
+var plumber = require('gulp-plumber');
 var through = require('through2');
 var del = require('del');
 
@@ -37,11 +38,13 @@ function copyTask() {
 function copyScssTask() {
     gutil.log("starting with scss files...");
     return gulp.src('src/styles/*.scss')
+        .pipe(plumber(function (err) {
+            gutil.log('error occurred in pipeline', err);
+            this.push(null);
+        }))
+        .pipe(inspect())
         .pipe(sass())
-        .on('error', function(err){
-            gutil.log('error occured', err)
-            this.push(null)
-        })
+        .pipe(plumber.stop())
         .pipe(through.obj(logging))
         .pipe(gulp.dest('out/'));
 }
@@ -54,4 +57,13 @@ function logging(file, _, callback) {
     gutil.log("hi there");
     this.push(file);
     callback();
+}
+
+function inspect() {
+    return through.obj(function (file, _, callback) {
+        gutil.log('looking at the file', file);
+        //this.emit('error', new Error('something broke'));
+        this.push(file)
+        callback();
+    });
 }
