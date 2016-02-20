@@ -35,6 +35,10 @@ node_modules
 #swap files
 .swp
 
+#iml project file
+.iml
+
+
 #ide dirs
 .idea
 
